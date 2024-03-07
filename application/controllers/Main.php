@@ -7,4 +7,9 @@ class Main extends CI_Controller {
 	{
 		$this->load->view('main/login');
 	}
+
+	function login_check()
+	{
+		echo "test";
+	}
 }
