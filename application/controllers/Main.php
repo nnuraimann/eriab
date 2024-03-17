@@ -42,41 +42,40 @@ class Main extends CI_Controller {
 
     public function register_process()
 {
-    print_r($_POST);exit();
-    
+    // Load the database library
+    $this->load->database();
+
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-       
         $name = $this->input->post('name');
         $email = $this->input->post('email');
         $password = $this->input->post('password');
 
-        
         $this->load->library('form_validation');
         $this->form_validation->set_rules('name', 'Name', 'trim|required');
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
-        $this->form_validation->set_rules('password', 'Password', 'trim|required');
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[users.email]');
+        $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[20]');
 
         if ($this->form_validation->run() == FALSE) {
-            
             $this->load->view('main/register');
         } else {
-            
+            // Hash the password
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+            // Prepare the data array
             $data = array(
                 'name' => $name,
                 'email' => $email,
-                'password' => $password,
-                'registration_date' => date('Y-m-d H:i:s') 
+                'password' => $hashed_password,
+                'registration_date' => date('Y-m-d H:i:s')
             );
-            $inserted = $this->db->insert('users', $data);
 
-            if ($inserted) {
-                
-                $data['message'] = "Registration successful!";
-                $this->load->view('main/register', $data);
+            // Insert the data into the database
+            if ($this->db->insert('users', $data)) {
+                $this->session->set_flashdata('message', 'Registration successful!');
+                redirect('main/dashboard');
             } else {
-                
-                $data['message'] = "Registration failed!";
-                $this->load->view('main/register', $data);
+                $this->session->set_flashdata('message', 'Registration failed!');
+                redirect('main/register');
             }
         }
     }
