@@ -25,9 +25,9 @@ class Main extends CI_Controller {
             $result = $query->fetch(PDO::FETCH_ASSOC);
 
             if ($result) {
-                echo "User exists";
+                redirect('main/dashboard');
             } else {
-                echo "User does not exist";
+                echo "User does not exist or password is incorrect";
             }
 
             $DB = null;
