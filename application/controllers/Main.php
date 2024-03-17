@@ -45,47 +45,52 @@ class Main extends CI_Controller {
     // Load the database library
     $this->load->database();
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $name = $this->input->post('name');
-        $email = $this->input->post('email');
-        $password = $this->input->post('password');
+    // Get user input values
+    $name = $this->input->post('name');
+    $email = $this->input->post('email');
+    $password = $this->input->post('password');
 
-        $this->load->library('form_validation');
-        $this->form_validation->set_rules('name', 'Name', 'trim|required');
-        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|is_unique[users.email]');
-        $this->form_validation->set_rules('password', 'Password', 'trim|required|min_length[6]|max_length[20]');
+    // Validate user input
+    if (empty($name) || empty($email) || empty($password)) {
+        // User input is invalid
+        $this->session->set_flashdata('message', 'Please fill in all required fields.');
+        redirect('main/register');
+    }
 
-        if ($this->form_validation->run() == FALSE) {
-            $this->load->view('main/register');
-        } else {
-            // Hash the password
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    // Hash the password
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-            // Prepare the data array
-            $data = array(
-                'name' => $name,
-                'email' => $email,
-                'password' => $hashed_password,
-                'registration_date' => date('Y-m-d H:i:s')
-            );
+    // Prepare the data array
+    $data = array(
+        'name' => $name,
+        'email' => $email,
+        'password' => $hashed_password,
+        'date' => date('Y-m-d H:i:s'),
+        'rank' => 'User'
+    );
 
-            // Insert the data into the database
-            if ($this->db->insert('users', $data)) {
-                $this->session->set_flashdata('message', 'Registration successful!');
-                redirect('main/dashboard');
-            } else {
-                $this->session->set_flashdata('message', 'Registration failed!');
-                redirect('main/register');
-            }
-        }
+    // Insert the data into the database
+    if ($this->db->insert('users', $data)) {
+        // Registration successful
+        redirect('registration_complete'); // Redirect to registration_complete.php
+    } else {
+        // Registration failed
+        $this->session->set_flashdata('message', 'Registration failed. Please try again later.');
+        redirect('main/register');
     }
 }
+
     public function dashboard()
     {
         
         $this->load->view('main/dashboard');
 
     }
+
+    public function registration_complete() {
+        $this->load->view('registration_complete');
+    }
+    
 
     
 }
