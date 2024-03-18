@@ -41,44 +41,55 @@ class Main extends CI_Controller {
     }
 
     public function register_process()
-{
-    // Load the database library
-    $this->load->database();
-
-    // Get user input values
-    $name = $this->input->post('name');
-    $email = $this->input->post('email');
-    $password = $this->input->post('password');
-
-    // Validate user input
-    if (empty($name) || empty($email) || empty($password)) {
-        // User input is invalid
-        $this->session->set_flashdata('message', 'Please fill in all required fields.');
-        redirect('main/register');
+    {
+        // Load the database library
+        $this->load->database();
+    
+        // Get user input values
+        $name = $this->input->post('name');
+        $email = $this->input->post('email');
+        $password = $this->input->post('password');
+    
+        // Validate user input
+        if (empty($name) || empty($email) || empty($password)) {
+            // User input is invalid
+            $this->session->set_flashdata('message', 'Please fill in all required fields.');
+            redirect('main/register');
+        }
+    
+        // Check if user email already exists
+        $DB = new PDO("mysql:host=localhost;dbname=ranks_db","root","");
+        $query = $DB->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+        $query->execute([$email]);
+        $result = $query->fetchColumn();
+        $DB = null;
+    
+        if ($result > 0) {
+            // Email already exists
+            $this->session->set_flashdata('message', 'Email has already been registered. Please choose another one.');
+            redirect('main/register');
+        }
+    
+        // Prepare the data array
+        $data = array(
+            'name' => $name,
+            'email' => $email,
+            'password' => $password, // Store password as entered by the user
+            'date' => date('Y-m-d H:i:s'),
+            'rank' => 'User'
+        );
+    
+        // Insert the data into the database
+        if ($this->db->insert('users', $data)) {
+            // Registration successful
+            redirect('registration_complete'); // Redirect to registration_complete.php
+        } else {
+            // Registration failed
+            $this->session->set_flashdata('message', 'Registration failed. Please try again later.');
+            redirect('main/register');
+        }
     }
-
-    // Hash the password
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-
-    // Prepare the data array
-    $data = array(
-        'name' => $name,
-        'email' => $email,
-        'password' => $password,
-        'date' => date('Y-m-d H:i:s'),
-        'rank' => 'User'
-    );
-
-    // Insert the data into the database
-    if ($this->db->insert('users', $data)) {
-        // Registration successful
-        redirect('registration_complete'); // Redirect to registration_complete.php
-    } else {
-        // Registration failed
-        $this->session->set_flashdata('message', 'Registration failed. Please try again later.');
-        redirect('main/register');
-    }
-}
+    
 
     public function dashboard()
     {
