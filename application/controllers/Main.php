@@ -44,6 +44,7 @@ class Main extends CI_Controller {
     {
         // Load the database library
         $this->load->database();
+        $this->load->model('Main_model');
     
         // Get user input values
         $name = $this->input->post('name');
@@ -58,17 +59,27 @@ class Main extends CI_Controller {
         }
     
         // Check if user email already exists
-        $DB = new PDO("mysql:host=localhost;dbname=ranks_db","root","");
-        $query = $DB->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
-        $query->execute([$email]);
-        $result = $query->fetchColumn();
-        $DB = null;
+        // $DB = new PDO("mysql:host=localhost;dbname=ranks_db","root","");
+        // $query = $DB->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+        // $query->execute([$email]);
+        // $result = $query->fetchColumn();
+        // $DB = null;
     
-        if ($result > 0) {
-            // Email already exists
-            $this->session->set_flashdata('message', 'Email has already been registered. Please choose another one.');
-            redirect('main/register');
+        // if ($result > 0) {
+        //     // Email already exists
+        //     $this->session->set_flashdata('message', 'Email has already been registered. Please choose another one.');
+        //     redirect('main/register');
+        // }
+
+        $validate = $this->Main_model->check_email($email);
+        if($validate == true)
+        {
+            echo "Email already Exist";
+        }else{
+            echo "successfully";
         }
+        exit;
+        echo "here " . $validate;exit;
     
         // Prepare the data array
         $data = array(
