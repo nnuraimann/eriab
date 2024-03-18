@@ -64,7 +64,7 @@ class Main extends CI_Controller {
     $data = array(
         'name' => $name,
         'email' => $email,
-        'password' => $hashed_password,
+        'password' => $password,
         'date' => date('Y-m-d H:i:s'),
         'rank' => 'User'
     );
@@ -88,7 +88,7 @@ class Main extends CI_Controller {
     }
 
     public function registration_complete() {
-        $this->load->view('registration_complete');
+        $this->load->view('main/registration_complete');
     }
     
 
