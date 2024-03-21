@@ -58,9 +58,6 @@
         <!-- /.col -->
       </div>
     </form>
-    <!-- /.social-auth-links -->
-
-    <a href="#">I forgot my password</a><br>
     <!-- Update the href attribute to point to the registration page URL -->
     <a href="<?php echo base_url('main/register'); ?>" class="text-center">Register a new user</a>
 

@@ -107,11 +107,13 @@ class Main extends CI_Controller {
         
         $this->load->view('main/dashboard');
 
+
     }
 
     public function registration_complete() {
         $this->load->view('main/registration_complete');
     }
+
     
 
     
