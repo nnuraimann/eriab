@@ -107,7 +107,7 @@ desired effect
                   <a href="#" class="btn btn-default btn-flat">Settings</a>
                 </div>
                 <div class="pull-right">
-                    <a href="login.php" class="btn btn-default btn-flat">Sign out</a>
+                    <a href="<?php echo base_url('main/logout'); ?>" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>

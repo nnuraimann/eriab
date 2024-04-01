@@ -104,17 +104,21 @@ class Main extends CI_Controller {
 
     public function dashboard()
     {
-        
+    
         $this->load->view('main/dashboard');
-
-
     }
 
     public function registration_complete() {
         $this->load->view('main/registration_complete');
     }
 
-    
+    public function logout(){
+        session_destroy();
+        redirect('main');
+    }
 
+    public function login_complete(){
+        $this->load->view('main/dashboard');
+    }
     
 }
