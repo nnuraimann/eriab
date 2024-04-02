@@ -2,119 +2,123 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Main extends CI_Controller {
+    function __construct()
+    {
+        parent::__construct();
+        if($this->session->userdata('email'))
+        redirect('office');
+    }
 
     public function index()
     {
-        // Load the login view
         $this->load->view('main/login');
     }
 
-    public function login_check()
-    {
-        if($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $email = $_POST['email']; 
-            $password = $_POST['password']; 
+    public function login_check(){
+        $this->load->library('form_validation');
+        //Validation for login form
+        $this->form_validation->set_rules('email','Email','required|valid_email');
+        $this->form_validation->set_rules('password','Password','required');
+        if($this->form_validation->run()){
+        $email=$this->input->post('email');
+        $password=md5($this->input->post('password'));
+        $this->load->model('Main_model');
+        $validate=$this->Main_model->login_user($email,$password);
+        if($validate){
+        $this->session->set_userdata('email',$validate->email);	
+        $this->session->set_userdata('password',$validate->password);	
+        redirect('office');
+        } else {
+        $this->session->set_flashdata('error','Invalid login details.Please try again.');
+        redirect('main');
+        }
+        } else{
+        $this->load->view('main');	
+        }
+    }
 
-            $DB = new PDO("mysql:host=localhost;dbname=ranks_db","root","");
-
-            $query = $DB->prepare("SELECT * FROM users WHERE email = :email AND password = :password");
-            $query->bindParam(':email', $email);
-            $query->bindParam(':password', $password);
-            $query->execute();
-
-            $result = $query->fetch(PDO::FETCH_ASSOC);
-
-            if ($result) {
-                redirect('main/dashboard');
-            } else {
-                echo "User does not exist or password is incorrect";
-            }
-
-            $DB = null;
+    public function login_process() {
+        $this->load->library('form_validation');
+        $this->load->model('Main_model');
+    
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('password', 'Password', 'required');
+    
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('message', validation_errors());
+            redirect('main/login');
+        }
+    
+        $email = $this->input->post('email');
+        $password = $this->input->post('password');
+    
+        $stored_hashed_password = $this->Main_model->get_hashed_password($email);
+    
+        if (!$stored_hashed_password) {
+            $this->session->set_flashdata('message', 'Invalid email or password.');
+            redirect('main/login');
+        }
+    
+        if (password_verify($password, $stored_hashed_password)) {
+            redirect('dashboard');
+        } else {
+            $this->session->set_flashdata('message', 'Invalid email or password.');
+            redirect('main/login');
         }
     }
 
     public function register()
     {
-        
         $this->load->view('main/register');
     }
 
-    public function register_process()
-    {
-        // Load the database library
-        $this->load->database();
+    public function register_process(){
+        $this->load->library('form_validation');
         $this->load->model('Main_model');
-    
-        // Get user input values
+
+        $this->form_validation->set_rules('name', 'Name', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+        $this->form_validation->set_rules('password', 'Password', 'required');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->session->set_flashdata('message', validation_errors());
+            redirect('main/register');
+        }
+
         $name = $this->input->post('name');
         $email = $this->input->post('email');
         $password = $this->input->post('password');
-    
-        // Validate user input
-        if (empty($name) || empty($email) || empty($password)) {
-            // User input is invalid
-            $this->session->set_flashdata('message', 'Please fill in all required fields.');
+
+        if ($this->Main_model->check_email($email)) {
+            $this->session->set_flashdata('message', 'Email has already been registered. Please choose another one.');
             redirect('main/register');
         }
-    
-        // Check if user email already exists
-        // $DB = new PDO("mysql:host=localhost;dbname=ranks_db","root","");
-        // $query = $DB->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
-        // $query->execute([$email]);
-        // $result = $query->fetchColumn();
-        // $DB = null;
-    
-        // if ($result > 0) {
-        //     // Email already exists
-        //     $this->session->set_flashdata('message', 'Email has already been registered. Please choose another one.');
-        //     redirect('main/register');
-        // }
 
-        $validate = $this->Main_model->check_email($email);
-        if($validate == true)
-        {
-            echo "Email already Exist";
-        }else{
-            echo "successfully";
-        }
-        exit;
-        echo "here " . $validate;exit;
-    
-        // Prepare the data array
+        $hashed_password = md5($password);
+
         $data = array(
             'name' => $name,
             'email' => $email,
-            'password' => $password, // Store password as entered by the user
+            'password' => $hashed_password,
             'date' => date('Y-m-d H:i:s'),
             'rank' => 'User'
         );
-    
-        // Insert the data into the database
-        if ($this->db->insert('users', $data)) {
-            // Registration successful
-            redirect('registration_complete'); // Redirect to registration_complete.php
+
+        if ($this->Main_model->create_user($data)) {
+            redirect('main/registration_complete');
         } else {
-            // Registration failed
             $this->session->set_flashdata('message', 'Registration failed. Please try again later.');
             redirect('main/register');
         }
     }
-    
 
     public function dashboard()
     {
-        
         $this->load->view('main/dashboard');
-
-
     }
 
     public function registration_complete() {
         $this->load->view('main/registration_complete');
     }
-
-    
-
     
 }
