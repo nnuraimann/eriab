@@ -34,7 +34,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <!-- Google Font -->
   <link rel="stylesheet"
-        href="<?php echo base_url('assets/'); ?>https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 <!--
 BODY TAG OPTIONS:
@@ -164,123 +164,7 @@ desired effect
     </section>
 
     <!-- fullCalendar -->
-    <script src="<?php echo base_url('assets/'); ?>bower_components/moment/moment.js"></script>
-    <script src="<?php echo base_url('assets/'); ?>bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
-
-    <script>
-  $(function () {
-
-    /* initialize the external events
-     -----------------------------------------------------------------*/
-    function init_events(ele) {
-      ele.each(function () {
-
-        // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-        // it doesn't need to have a start or end
-        var eventObject = {
-          title: $.trim($(this).text()) // use the element's text as the event title
-        }
-
-        // store the Event Object in the DOM element so we can get to it later
-        $(this).data('eventObject', eventObject)
-
-        // make the event draggable using jQuery UI
-        $(this).draggable({
-          zIndex        : 1070,
-          revert        : true, // will cause the event to go back to its
-          revertDuration: 0  //  original position after the drag
-        })
-
-      })
-    }
-
-    init_events($('#external-events div.external-event'))
-
-    /* initialize the calendar
-     -----------------------------------------------------------------*/
-    //Date for the calendar events (dummy data)
-    var date = new Date()
-    var d    = date.getDate(),
-        m    = date.getMonth(),
-        y    = date.getFullYear()
-    $('#calendar').fullCalendar({
-      header    : {
-        left  : 'prev,next today',
-        center: 'title',
-        right : 'month,agendaWeek,agendaDay'
-      },
-      buttonText: {
-        today: 'today',
-        month: 'month',
-        week : 'week',
-        day  : 'day'
-      },
-      editable  : true,
-      droppable : true, // this allows things to be dropped onto the calendar !!!
-      drop      : function (date, allDay) { // this function is called when something is dropped
-
-        // retrieve the dropped element's stored Event Object
-        var originalEventObject = $(this).data('eventObject')
-
-        // we need to copy it, so that multiple events don't have a reference to the same object
-        var copiedEventObject = $.extend({}, originalEventObject)
-
-        // assign it the date that was reported
-        copiedEventObject.start           = date
-        copiedEventObject.allDay          = allDay
-        copiedEventObject.backgroundColor = $(this).css('background-color')
-        copiedEventObject.borderColor     = $(this).css('border-color')
-
-        // render the event on the calendar
-        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-        $('#calendar').fullCalendar('renderEvent', copiedEventObject, true)
-
-        // is the "remove after drop" checkbox checked?
-        if ($('#drop-remove').is(':checked')) {
-          // if so, remove the element from the "Draggable Events" list
-          $(this).remove()
-        }
-
-      }
-    })
-
-    /* ADDING EVENTS */
-    var currColor = '#3c8dbc' //Red by default
-    //Color chooser button
-    var colorChooser = $('#color-chooser-btn')
-    $('#color-chooser > li > a').click(function (e) {
-      e.preventDefault()
-      //Save color
-      currColor = $(this).css('color')
-      //Add color effect to button
-      $('#add-new-event').css({ 'background-color': currColor, 'border-color': currColor })
-    })
-    $('#add-new-event').click(function (e) {
-      e.preventDefault()
-      //Get value and make sure it is not null
-      var val = $('#new-event').val()
-      if (val.length == 0) {
-        return
-      }
-
-      //Create events
-      var event = $('<div />')
-      event.css({
-        'background-color': currColor,
-        'border-color'    : currColor,
-        'color'           : '#fff'
-      }).addClass('external-event')
-      event.html(val)
-      $('#external-events').prepend(event)
-
-      //Add draggable funtionality
-      init_events(event)
-
-      //Remove event from text input
-      $('#new-event').val('')
-    })
-  })
-</script>
+    <div id="calendar"></div> <!-- This is where the calendar will be rendered -->
 
     <!-- Main content -->
     <section class="content container-fluid">
@@ -299,6 +183,7 @@ desired effect
     <!-- Default to the left -->
     <strong>Copyright &copy; 2024 <a href="#">Company</a>.</strong> All rights reserved.
   </footer>
+</div>
 <!-- ./wrapper -->
 
 <!-- REQUIRED JS SCRIPTS -->
@@ -310,8 +195,100 @@ desired effect
 <!-- AdminLTE App -->
 <script src="<?php echo base_url('assets/'); ?>dist/js/adminlte.min.js"></script>
 
-<!-- Optionally, you can add Slimscroll and FastClick plugins.
-     Both of these plugins are recommended to enhance the
-     user experience. -->
+<!-- FullCalendar -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    var calendar = $('#calendar').fullCalendar({
+        editable:true,
+        header:{
+            left:'prev,next today',
+            center:'title',
+            right:'month,agendaWeek,agendaDay'
+        },
+        events:"<?php echo base_url(); ?>fullcalendar/load",
+        selectable:true,
+        selectHelper:true,
+        select:function(start, end, allDay)
+        {
+            var title = prompt("Enter Event Title");
+            if(title)
+            {
+                var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+                var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+                $.ajax({
+                    url:"<?php echo base_url(); ?>fullcalendar/insert",
+                    type:"POST",
+                    data:{title:title, start:start, end:end},
+                    success:function()
+                    {
+                        calendar.fullCalendar('refetchEvents');
+                        alert("Added Successfully");
+                    }
+                })
+            }
+        },
+        eventResize:function(event)
+        {
+            var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+            var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+
+            var title = event.title;
+
+            var id = event.id;
+
+            $.ajax({
+                url:"<?php echo base_url(); ?>fullcalendar/update",
+                type:"POST",
+                data:{title:title, start:start, end:end, id:id},
+                success:function()
+                {
+                    calendar.fullCalendar('refetchEvents');
+                    alert("Event Update");
+                }
+            })
+        },
+        eventDrop:function(event)
+        {
+            var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+            //alert(start);
+            var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+            //alert(end);
+            var title = event.title;
+            var id = event.id;
+            $.ajax({
+                url:"<?php echo base_url(); ?>fullcalendar/update",
+                type:"POST",
+                data:{title:title, start:start, end:end, id:id},
+                success:function()
+                {
+                    calendar.fullCalendar('refetchEvents');
+                    alert("Event Updated");
+                }
+            })
+        },
+        eventClick:function(event)
+        {
+            if(confirm("Are you sure you want to remove it?"))
+            {
+                var id = event.id;
+                $.ajax({
+                    url:"<?php echo base_url(); ?>fullcalendar/delete",
+                    type:"POST",
+                    data:{id:id},
+                    success:function()
+                    {
+                        calendar.fullCalendar('refetchEvents');
+                        alert('Event Removed');
+                    }
+                })
+            }
+        }
+    });
+});
+</script>
+
 </body>
 </html>
