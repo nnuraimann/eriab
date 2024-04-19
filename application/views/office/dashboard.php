@@ -98,6 +98,7 @@ desired effect
                 <img src="" class="img-circle" alt="User Image">
 
                 <p>
+                  <?php echo $user['name']; ?>
                   <!-- nama user -->
                 </p>
               </li>
@@ -107,7 +108,7 @@ desired effect
                   <a href="#" class="btn btn-default btn-flat">Settings</a>
                 </div>
                 <div class="pull-right">
-                    <a href="login.php" class="btn btn-default btn-flat">Sign out</a>
+                    <a href="<?php echo base_url('office/logout'); ?>" class="btn btn-default btn-flat">Sign out</a>
                 </div>
               </li>
             </ul>

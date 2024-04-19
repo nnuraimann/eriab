@@ -12,7 +12,8 @@ class Main_model extends CI_Model {
         return password_hash($password, PASSWORD_BCRYPT);
     }
 
-    public function login_user($email,$password){
+    public function login_user($email,$password)
+    {
         $data=array(
         'email'=>$email,
         'password'=>$password);

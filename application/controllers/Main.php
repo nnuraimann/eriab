@@ -5,7 +5,7 @@ class Main extends CI_Controller {
     function __construct()
     {
         parent::__construct();
-        if($this->session->userdata('email'))
+        if($this->session->userdata('name'))
         redirect('office');
     }
 
@@ -14,26 +14,33 @@ class Main extends CI_Controller {
         $this->load->view('main/login');
     }
 
-    public function login_check(){
+    public function login_check()
+    {
         $this->load->library('form_validation');
+        
         //Validation for login form
         $this->form_validation->set_rules('email','Email','required|valid_email');
         $this->form_validation->set_rules('password','Password','required');
-        if($this->form_validation->run()){
-        $email=$this->input->post('email');
-        $password=md5($this->input->post('password'));
-        $this->load->model('Main_model');
-        $validate=$this->Main_model->login_user($email,$password);
-        if($validate){
-        $this->session->set_userdata('email',$validate->email);	
-        $this->session->set_userdata('password',$validate->password);	
-        redirect('office');
-        } else {
-        $this->session->set_flashdata('error','Invalid login details.Please try again.');
-        redirect('main');
-        }
+        
+        if($this->form_validation->run())
+        {
+            $email      = $this->input->post('email');
+            $password   = md5($this->input->post('password'));
+            $this->load->model('Main_model');
+            $validate   = $this->Main_model->login_user($email,$password);
+            // echo "<pre>", print_r($validate), "</pre>";
+            // exit;
+            if($validate)
+            {
+                $this->session->set_userdata('id',$validate->id);	
+                $this->session->set_userdata('name',$validate->name);
+                redirect('office');
+            } else {
+            $this->session->set_flashdata('error','Invalid login details.Please try again.');
+            redirect('main');
+            }
         } else{
-        $this->load->view('main');	
+            $this->load->view('main');	
         }
     }
 
