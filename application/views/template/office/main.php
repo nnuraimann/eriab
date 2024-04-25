@@ -63,7 +63,7 @@ desired effect
   <header class="main-header">
 
     <!-- Logo -->
-    <a href="<?php echo base_url('main/dashboard'); ?>" class="logo">
+    <a href="<?php echo base_url('office/dashboard'); ?>" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>IAB</b></span>
       <!-- logo for regular state and mobile devices -->
@@ -105,7 +105,7 @@ desired effect
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Settings</a>
+                  <a href="<?php echo base_url('office/profile'); ?>" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
                     <a href="<?php echo base_url('office/logout'); ?>" class="btn btn-default btn-flat">Sign out</a>
@@ -145,17 +145,6 @@ desired effect
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Blank page
-        <small>it all starts here</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li><a href="#">Examples</a></li>
-        <li class="active">Blank page</li>
-      </ol>
-    </section>
 
     <!-- Main content -->
     <?php $this->load->view($content); ?>

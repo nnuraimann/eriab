@@ -15,8 +15,16 @@ class Office extends CI_Controller {
         $this->load->view('office/dashboard', $data);
     }
 
+    public function dashboard($data=false) 
+    {
+        $data['user'] = $this->session->userdata();
+        $data['content'] = 'office/dashboard/main';
+        $data['script'] = 'office/dashboard/script';
+        $this->load->view('template/office/main', $data);
+    }
     public function booking($data=false)
     {
+        $data['user'] = $this->session->userdata();
         $data['content'] = 'office/booking/main';
         $data['script'] = 'office/booking/script';
         $this->load->view('template/office/main', $data);
@@ -24,6 +32,7 @@ class Office extends CI_Controller {
 
     public function room($data=false)
     {
+        $data['user'] = $this->session->userdata();
         $data['content'] = 'office/room/main';
         $data['script'] = 'office/room/script';
         $this->load->view('template/office/main', $data);
@@ -31,34 +40,20 @@ class Office extends CI_Controller {
 
     public function classroom($data=false)
     {
+        $data['user'] = $this->session->userdata();
         $data['content'] = 'office/classroom/main';
         $data['script'] = 'office/classroom/script';
         $this->load->view('template/office/main', $data);
     }
 
-    public function dashboard($data=false) {
-        // Load the view for current booking
+    public function profile($data=false)
+    {
         $data['user'] = $this->session->userdata();
-        $data['content'] = 'office/dashboard/main';
-        $data['script'] = 'office/dashboard/script';
+        $data['content'] = 'office/profile/main';
+        $data['script'] = 'office/profile/script';
         $this->load->view('template/office/main', $data);
     }
 
-    public function current_booking() {
-        // Load the view for current booking
-        $data['user'] = $this->session->userdata();
-        $this->load->view('office/booking', $data);
-    }
-    public function rooms() {
-        // Load the view for current booking
-        $data['user'] = $this->session->userdata();
-        $this->load->view('office/room', $data);
-    }
-    public function classrooms() {
-        // Load the view for current booking
-        $data['user'] = $this->session->userdata();
-        $this->load->view('office/classroom', $data);
-    }
 
     public function logout()
     {

@@ -34,7 +34,7 @@ class Main extends CI_Controller {
             {
                 $this->session->set_userdata('id',$validate->id);	
                 $this->session->set_userdata('name',$validate->name);
-                redirect('office');
+                redirect('office/dashboard');
             } else {
             $this->session->set_flashdata('error','Invalid login details.Please try again.');
             redirect('main');

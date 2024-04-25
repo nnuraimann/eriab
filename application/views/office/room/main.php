@@ -1,5 +1,7 @@
+<section class="content-header">
+    <h1>Room</h1>
+</section>
 <section class="content">
-
     <!-- Default box -->
     <div class="box">
     <div class="box-header with-border">
