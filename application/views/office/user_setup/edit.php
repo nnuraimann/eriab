@@ -1,8 +1,9 @@
-<div class="container">
+<section class = "content">
+<div class="box container">
   <div class="row">
 
     <div class="col-lg-12 my-5">
-      <h2 class="text-center mb-3">Edit User</h2>
+      <h2 class="text-center mb-3">Edit Room</h2>
     </div>
 
     <div class="col-lg-12">
@@ -12,26 +13,31 @@
         <a class="btn btn-warning" href="<?php echo base_url('office/user_setup'); ?>"> <i class="fas fa-angle-left"></i> Back</a>
       </div>
 
-      <form method="post" action="<?php echo base_url('office/update_room/' . $data->id); ?>">
+      <form method="post" action="<?php echo base_url('office/update_user/' . $data->id); ?>">
 
         <div class="form-group">
-          <label>Room Name</label>
-          <input class="form-control" type="text" name="Name" value="<?php echo $data->room_name; ?>">
+          <label>User Name</label>
+          <input class="form-control" type="text" name="Name" value="<?php echo $data->name; ?>">
         </div>
 
         <div class="form-group">
-          <label>Room Department</label>
-          <input class="form-control" type="text" name="Department" value="<?php echo $data->room_department; ?>">
+          <label>User Full Name</label>
+          <input class="form-control" type="text" name="FullName" value="<?php echo $data->fullname; ?>">
         </div>
 
         <div class="form-group">
-          <label>Room Capacity</label>
-          <input class="form-control" type="text" name="Capacity" value="<?php echo $data->room_capacity; ?>">
+          <label>User Email</label>
+          <input class="form-control" type="text" name="Email" value="<?php echo $data->email; ?>">
         </div>
 
         <div class="form-group">
-          <label>Room Type</label>
-          <input class="form-control" type="text" name="Type" value="<?php echo $data->room_type; ?>">
+          <label>User Password</label>
+          <input class="form-control" type="text" name="Password" value="<?php echo $data->password; ?>">
+        </div>
+
+        <div class="form-group">
+          <label>User Type</label>
+          <input class="form-control" type="text" name="Type" value="<?php echo $data->rank; ?>">
         </div>
 
         <div class="form-group">
@@ -44,3 +50,4 @@
     </div>
   </div>
 </div>
+</section>

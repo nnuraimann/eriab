@@ -1,4 +1,5 @@
-<div class="container">
+<section class = "content">
+<div class="box container">
   <div class="row">
 
     <div class="col-lg-12 my-5">
@@ -44,3 +45,4 @@
     </div>
   </div>
 </div>
+</section>

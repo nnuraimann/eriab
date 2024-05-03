@@ -1,5 +1,5 @@
 <section class="content">
-<div class="container">
+<div class="box container">
     <div class="row">
 
       <div class="col-lg-12 my-5">
@@ -10,9 +10,10 @@
 
         <?php echo $this->session->flashdata('message'); ?>
 
-        <div class="d-flex justify-content-between mb-3">
+        <div class="d-flex justify-content-between mb-5">
           <h4>Manage Rooms</h4>
-          <a href="<?= base_url('office/room_create') ?>" class="btn btn-success"> <i class="fas fa-plus"></i> Add New Post</a>
+          <a href="<?= base_url('office/room_create') ?>" class="btn btn-success" style="margin-bottom: 10px;"> 
+          <i class="fas fa-plus"></i> Add New Post</a>
         </div>
 
         <table class="table table-bordered table-default">
@@ -20,10 +21,11 @@
           <thead class="thead-light">
             <tr>
               <th width="2%">#</th>
-              <th width="25%">Room Name</th>
+              <th width="35%">Room Name</th>
               <th width="25%">Room Department</th>
-              <th width="25%">Room Capacity</th>
-              <th width="23%">Room Type</th>
+              <th width="15%">Room Capacity</th>
+              <th width="10%">Room Type</th>
+              <th width="13%">Action</th>
             </tr>
           </thead>
 
