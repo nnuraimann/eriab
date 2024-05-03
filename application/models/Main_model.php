@@ -30,6 +30,15 @@ class Main_model extends CI_Model {
         return $query->num_rows() > 0;
     }
 
+    function checkUserexist($name) {
+        $this->db->where('name', $name);
+        $query = $this->db->get('users');
+        if ($query->num_rows() > 0) {
+          return true;
+        }
+        return false; 
+      }
+
     public function create_user($data) {
 
         // $data = array(

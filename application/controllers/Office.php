@@ -32,6 +32,7 @@ class Office extends CI_Controller {
         $this->load->view('template/office/main', $data);
     }
 
+//******************************************************************************/
     public function room($data=false)
     {
         $data['user'] = $this->session->userdata();
@@ -61,6 +62,7 @@ class Office extends CI_Controller {
     {
         $data['user'] = $this->session->userdata();
         $data['jabatan'] = $this->dbMain->get_mastercode("user_department");
+        $data['room'] = $this->dbMain->get_mastercode("room_type");
         $data['content'] = 'office/room_setup/create';
         $this->load->view('template/office/main', $data);
     }
@@ -77,6 +79,9 @@ class Office extends CI_Controller {
     public function room_edit($id)
     {
         $data['data'] = $this->dbMain->find_record_by_id('room', $id);
+        $data['user'] = $this->session->userdata();
+        $data['jabatan'] = $this->dbMain->get_mastercode("user_department");
+        $data['room'] = $this->dbMain->get_mastercode("room_type");
         // echo "<pre>", print_r($post), "</pre>";
         $data['content'] = 'office/room_setup/edit';
         $this->load->view('template/office/main', $data);
@@ -105,7 +110,7 @@ class Office extends CI_Controller {
 		$this->session->set_flashdata('message', '<div class="alert alert-success">Record has been updated successfully.</div>');
         return redirect('office/room_setup');	
 	}
-
+//******************************************************************************/
     public function user_setup($data=false)
     {
         $data['user'] = $this->session->userdata();
@@ -118,6 +123,7 @@ class Office extends CI_Controller {
     public function user_create($data=false)
     {
         $data['user'] = $this->session->userdata();
+        $data['usertype'] = $this->dbMain->get_mastercode("user_rank");
         $data['content'] = 'office/user_setup/create';
         $this->load->view('template/office/main', $data);
     }
@@ -125,15 +131,23 @@ class Office extends CI_Controller {
     public function user_store($data=false)
     {
         $post=$this->input->post();
+        //checkusername
+        $check = $this->dbMain->checkUserexist($post['Name']);
+        if($check == true){
+            $this->session->set_flashdata('message', '<div class="alert alert-danger">Username already exist!.</div>');
+            return redirect('office/user_setup');
+        }else{
+            $this->dbMain->add_user('users', $post);
+            return redirect('office/user_setup'); 
+        }
         // echo "<pre>", print_r($post), "</pre>";
-        $this->dbMain->add_user('users', $post);
-        return redirect('office/user_setup');
-
     }
 
     public function user_edit($id)
     {
         $data['data'] = $this->dbMain->find_user_by_id('users', $id);
+        $data['user'] = $this->session->userdata();
+        $data['usertype'] = $this->dbMain->get_mastercode("user_rank");
         // echo "<pre>", print_r($post), "</pre>";
         $data['content'] = 'office/user_setup/edit';
         $this->load->view('template/office/main', $data);
