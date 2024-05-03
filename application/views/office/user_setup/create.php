@@ -35,8 +35,12 @@
         </div>
 
         <div class="form-group">
-          <label>User Type</label>
-          <input class="form-control" type="text" name="Type">
+          <label for="usertype">User Type</label>
+          <select class="form-control" id="usertype" name="Type">
+            <?php foreach($usertype as $list) : ?>
+              <option value="<?php echo $list->value; ?>"><?php echo $list->description; ?></option>
+            <?php endforeach;?> 
+          </select>
         </div>
 
         <div class="form-group">

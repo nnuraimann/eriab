@@ -36,8 +36,15 @@
         </div>
 
         <div class="form-group">
-          <label>User Type</label>
-          <input class="form-control" type="text" name="Type" value="<?php echo $data->rank; ?>">
+          <label for="usertype">User Type</label>
+          <select class="form-control" id="usertype" name="Type">
+            <?php 
+              $user_type = $data->rank;
+              foreach($usertype as $list) : 
+              ?>
+              <option value="<?php echo $list->value; ?>" <?php if($list->value == $user_type){echo "selected";} ?>><?php echo $list->description; ?></option>
+            <?php endforeach;?> 
+          </select>
         </div>
 
         <div class="form-group">

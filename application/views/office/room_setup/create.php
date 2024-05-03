@@ -22,7 +22,8 @@
         <div class="form-group">
           <label for="department">Room Department</label>
           <select class="form-control" id="department" name="Department">
-            <?php foreach($jabatan as $list) : ?>
+            
+          <?php foreach($jabatan as $list) : ?>
               <option value="<?php echo $list->value; ?>"><?php echo $list->description; ?></option>
             <?php endforeach;?> 
           </select>
@@ -34,8 +35,12 @@
         </div>
 
         <div class="form-group">
-          <label>Room Type</label>
-          <input class="form-control" type="text" name="Type">
+          <label for = "room">Room Type</label>
+          <select class = "form-control" id ="room" name ="Type">
+          <?php foreach($room as $list) : ?>
+              <option value="<?php echo $list->value; ?>"><?php echo $list->description; ?></option>
+            <?php endforeach;?> 
+          </select>
         </div>
 
         <div class="form-group">

@@ -21,8 +21,15 @@
         </div>
 
         <div class="form-group">
-          <label>Room Department</label>
-          <input class="form-control" type="text" name="Department" value="<?php echo $data->room_department; ?>">
+          <label for="department">Room Department</label>
+          <select class="form-control" id="department" name="Department">
+            <?php 
+              $room_jabatan = $data->room_department;
+              foreach($jabatan as $list) : 
+              ?>
+              <option value="<?php echo $list->value; ?>" <?php if($list->value == $room_jabatan){echo "selected";}?>><?php echo $list->description; ?></option>
+            <?php endforeach;?> 
+          </select>
         </div>
 
         <div class="form-group">
@@ -31,8 +38,15 @@
         </div>
 
         <div class="form-group">
-          <label>Room Type</label>
-          <input class="form-control" type="text" name="Type" value="<?php echo $data->room_type; ?>">
+          <label for = "room">Room Type</label>
+          <select class = "form-control" id ="room" name ="Type">
+          <?php 
+              $roomtype = $data->room_type;
+              foreach($room as $list) : 
+              ?>
+              <option value="<?php echo $list->value; ?>" <?php if($list->value == $roomtype){echo "selected";}?>><?php echo $list->description; ?></option>
+            <?php endforeach;?> 
+          </select>
         </div>
 
         <div class="form-group">
