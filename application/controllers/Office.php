@@ -15,7 +15,7 @@ class Office extends CI_Controller {
     public function index($data=false)
     {
         $data['user'] = $this->session->userdata();
-        $this->load->view('office/dashboard', $data);
+        $this->load->view('office/dashboard/main', $data);
     }
 
     public function dashboard($data=false) 
@@ -61,6 +61,7 @@ class Office extends CI_Controller {
     public function room_create($data=false)
     {
         $data['user'] = $this->session->userdata();
+        $data['jabatan'] = $this->dbMain->get_mastercode("user_department");
         $data['content'] = 'office/room_setup/create';
         $this->load->view('template/office/main', $data);
     }

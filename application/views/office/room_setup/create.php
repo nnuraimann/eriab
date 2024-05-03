@@ -2,7 +2,7 @@
   <div class="row">
 
     <div class="col-lg-12 my-5">
-      <h2 class="text-center mb-3">Codeigniter 3 CRUD (Create-Read-Update-Delete) Application</h2>
+      <h2 class="text-center mb-3">ROOM CREATE</h2>
     </div>
 
     <div class="col-lg-12">
@@ -20,8 +20,12 @@
         </div>
 
         <div class="form-group">
-          <label>Room Department</label>
-          <input class="form-control" type="text" name="Department">
+          <label for="department">Room Department</label>
+          <select class="form-control" id="department" name="Department">
+            <?php foreach($jabatan as $list) : ?>
+              <option value="<?php echo $list->value; ?>"><?php echo $list->description; ?></option>
+            <?php endforeach;?> 
+          </select>
         </div>
 
         <div class="form-group">

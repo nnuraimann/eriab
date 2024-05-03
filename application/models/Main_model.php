@@ -115,4 +115,10 @@ class Main_model extends CI_Model {
         $result = $this->db->insert($table, $insert);
 		return $result;
     }
+
+    public function get_mastercode($module)
+	{
+        $result = $this->db->get_where("mastercode", ['module' => $module])->result();
+		return $result;
+	}
 }
