@@ -14,8 +14,7 @@ class Office extends CI_Controller {
 
     public function index($data=false)
     {
-        $data['user'] = $this->session->userdata();
-        $this->load->view('office/dashboard/main', $data);
+        redirect('office/dashboard');
     }
 
     public function dashboard($data=false) 
@@ -147,6 +146,13 @@ class Office extends CI_Controller {
         return redirect('office/user_setup');	
     }
 
+    // public function user_pass_reset($id)
+	// {
+	// 	$this->dbMain->reset_pass('users', $id);
+	// 	$this->session->set_flashdata('message', '<div class="alert alert-success">Password has been reset successfully.</div>');
+    //     return redirect('office/user_setup');	
+    // }
+
     public function update_user($id)
 	{
         
@@ -179,5 +185,48 @@ class Office extends CI_Controller {
         $this->session->unset_userdata('email');
         $this->session->sess_destroy();
         return redirect('main');
+    }
+
+    public function submit_booking($data=false)
+    {
+        $this->load->library('form_validation');
+        $post=$this->input->post();
+
+
+        $this->form_validation->set_data($post);
+        $this->form_validation->set_rules('date', 'create_dt', 'required');
+        $this->form_validation->set_rules('startTime', 'start_dt', 'required');
+        $this->form_validation->set_rules('endTime', 'end_dt', 'required');
+
+        $status = TRUE;
+        if ($this->form_validation->run() == FALSE) {
+            $status = FALSE;
+            $msg='Form unsuccessful';
+        } else{
+            $startTime = $post['startTime'];
+            $endTime = $post['endTime'];
+
+            // Create a DateTime object using the time string
+            $dateTime1 = DateTime::createFromFormat('g:i A', $startTime);
+            $dateTime2 = DateTime::createFromFormat('g:i A', $endTime);
+
+            // Format the DateTime object to 24-hour format
+            $cstartTime = $dateTime1->format('H:i:s');
+            $cendTime = $dateTime2->format('H:i:s');
+
+            if($cstartTime >= $cendTime){
+                $status = FALSE;
+                $msg='Start time cannot more than or equal to End time';
+            } else{
+                $this->dbMain->add_booking('booking', $post);
+                $status = TRUE;
+                $msg='Booking Successful!';
+            }
+        }
+        $respond=array(
+            'status'=>$status,
+            'msg'=>$msg,
+        );
+        echo json_encode($respond);
     }
 }

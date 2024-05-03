@@ -31,11 +31,6 @@
         </div>
 
         <div class="form-group">
-          <label>User Password</label>
-          <input class="form-control" type="text" name="Password" value="<?php echo $data->password; ?>">
-        </div>
-
-        <div class="form-group">
           <label>User Type</label>
           <input class="form-control" type="text" name="Type" value="<?php echo $data->rank; ?>">
         </div>

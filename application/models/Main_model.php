@@ -110,7 +110,8 @@ class Main_model extends CI_Model {
 
     //******************************************************************************/
 
-    public function add_user($table, $data){
+    public function add_user($table, $data)
+    {
         $insert=array(
             'name' => $data['Name'],
             'fullname' => $data['FullName'],
@@ -151,4 +152,31 @@ class Main_model extends CI_Model {
         $result = $this->db->get_where("mastercode", ['module' => $module])->result();
 		return $result;
 	}
+
+    public function add_booking($table, $data)
+    {
+        $startTime = $data['startTime'];
+        $endTime = $data['endTime'];
+
+        // Create a DateTime object using the time string
+        $dateTime1 = DateTime::createFromFormat('g:i A', $startTime);
+        $dateTime2 = DateTime::createFromFormat('g:i A', $endTime);
+
+        // Format the DateTime object to 24-hour format
+        $cstartTime = $dateTime1->format('H:i:s');
+        $cendTime = $dateTime2->format('H:i:s');
+
+        //echo $convertedTime; // Output: 15:45:00
+
+        $insert=array(
+            'create_dt' => date('Y-m-d H:i:s'),
+            'start_dt' => $data['date'] . " " . $cstartTime,
+            'end_dt' => $data['date'] . " " . $cendTime,
+            'notes' => $data['notes'],
+            'user_id' => $this->session->userdata('id'),
+            'status' => "SUBMIT",
+        );
+        $result = $this->db->insert($table, $insert);
+		return $result;
+    }
 }

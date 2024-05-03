@@ -10,19 +10,31 @@
         <h4 class="modal-title">Booking Form</h4>
         </div>
         <div class="modal-body">
-        <form role="form">
+        <form role="form" id="frm-booking">
             <div class="box-body">
             <div class="form-group">
                 <label for="exampleInputEmail1">Date</label>
-                <input type="text" class="form-control" id="date-current">
+                <input type="text" name="date" class="form-control" id="date-current">
             </div>
 
             <div class="bootstrap-timepicker">
                 <div class="form-group">
-                  <label>Time picker:</label>
+                  <label>Start time:</label>
 
                   <div class="input-group">
-                    <input type="text" class="form-control timepicker">
+                    <input type="text" name="startTime" class="form-control timepicker">
+
+                    <div class="input-group-addon">
+                      <i class="fa fa-clock-o"></i>
+                    </div>
+                  </div>
+                  <!-- /.input group -->
+                </div>
+                <div class="form-group">
+                  <label>End time:</label>
+
+                  <div class="input-group">
+                    <input type="text" name="endTime" class="form-control timepicker">
 
                     <div class="input-group-addon">
                       <i class="fa fa-clock-o"></i>
@@ -35,13 +47,13 @@
 
             <div class="form-group">
                 <label for="exampleInputPassword1">Notes</label>
-                <input type="text" class="form-control" id="notes">
+                <input type="text" name="notes" class="form-control" id="notes">
             </div>
         </form>
         </div>
         <div class="modal-footer">
         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-primary btn-submit-booking">Submit</button>
         </div>
     </div>
     <!-- /.modal-content -->
@@ -154,4 +166,23 @@ $.ajax({
         }
     });
 });
+
+$(document).on("click",".btn-submit-booking",function() {
+    $.ajax({
+        url:"<?php echo base_url(); ?>office/submit_booking",
+        type:"POST",
+        dataType:"json",
+        data:$('#frm-booking').serialize(),
+        success:function(data)
+        {
+            if(data.status == true){
+                alert(data.msg);
+                location.reload();
+            } else{
+                alert(data.msg);
+            }
+        }
+    })
+});
+
 </script>

@@ -43,6 +43,7 @@
                 <td>
                   <a href="<?= base_url('office/user_edit/' . $users->id) ?>" class="btn btn-primary"> <i class="fas fa-edit"></i> Edit </a>
                   <a href="<?= base_url('office/user_delete/' . $users->id) ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')"> <i class="fas fa-trash"></i> Delete </a>
+                  <a href="<?= base_url('office/user_pass_reset/' . $users->id) ?>" class="btn btn-warning" onclick="return confirm('Are you sure you want to reset your password?')"> <i class="fas fa-trash"></i> Reset Password </a>
                 </td>
 
               </tr>
