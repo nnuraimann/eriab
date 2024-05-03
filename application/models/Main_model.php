@@ -69,5 +69,50 @@ class Main_model extends CI_Model {
             $this->db->insert('keytab', array('key_num' => $next_keytab_number));
             return $next_keytab_number;
         }
-     }
+    }
+
+    public function add_room($table, $data){
+        $insert=array(
+            'room_name' => $data['Name'],
+            'room_department' => $data['Department'],
+            'room_capacity' => $data['Capacity'],
+            'room_type' => $data['Type'],
+        );
+        $result = $this->db->insert($table, $insert);
+		return $result;
+    }
+
+    public function get_room($table)
+	{
+		$result = $this->db->get($table)->result();
+		return $result;
+	}
+
+    public function find_record_by_id($table, $id)
+	{
+		$result = $this->db->get_where($table, ['id' => $id])->row();
+		return $result;
+	}
+
+    public function delete_by_id($table, $id)
+	{
+		$result = $this->db->delete($table, ['id' => $id]);
+		return $result;
+	}
+
+    public function update_by_id($table, $data, $id)
+	{
+		$result = $this->db->where('id', $id)->update($table, $data);
+		return $result;
+	}
+
+    public function add_user($table, $data){
+        $insert=array(
+            'name' => $data['Name'],
+            'fullname' => $data['FullName'],
+            'email' => $data['Email'],
+        );
+        $result = $this->db->insert($table, $insert);
+		return $result;
+    }
 }
