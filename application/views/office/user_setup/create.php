@@ -15,18 +15,28 @@
       <form method="post" action="<?php echo base_url('office/user_store'); ?>">
 
         <div class="form-group">
-          <label>Name</label>
+          <label>User Name</label>
           <input class="form-control" type="text" name="Name">
         </div>
 
         <div class="form-group">
-          <label>Full Name</label>
+          <label>User Full Name</label>
           <input class="form-control" type="text" name="FullName">
         </div>
 
         <div class="form-group">
-          <label>Email</label>
+          <label>User Email</label>
           <input class="form-control" type="text" name="Email">
+        </div>
+
+        <div class="form-group">
+          <label>User Password</label>
+          <input class="form-control" type="text" name="Password">
+        </div>
+
+        <div class="form-group">
+          <label>User Type</label>
+          <input class="form-control" type="text" name="Type">
         </div>
 
         <div class="form-group">

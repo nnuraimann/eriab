@@ -71,6 +71,8 @@ class Main_model extends CI_Model {
         }
     }
 
+    //******************************************************************************/
+
     public function add_room($table, $data){
         $insert=array(
             'room_name' => $data['Name'],
@@ -106,15 +108,43 @@ class Main_model extends CI_Model {
 		return $result;
 	}
 
+    //******************************************************************************/
+
     public function add_user($table, $data){
         $insert=array(
             'name' => $data['Name'],
             'fullname' => $data['FullName'],
             'email' => $data['Email'],
+            'password' => md5($data['Password']),
+            'rank' => $data['Type'],
         );
         $result = $this->db->insert($table, $insert);
 		return $result;
     }
+
+    public function get_user($table)
+	{
+		$result = $this->db->get($table)->result();
+		return $result;
+	}
+    
+    public function find_user_by_id($table, $id)
+	{
+		$result = $this->db->get_where($table, ['id' => $id])->row();
+		return $result;
+	}
+
+    public function delete_user_by_id($table, $id)
+	{
+		$result = $this->db->delete($table, ['id' => $id]);
+		return $result;
+	}
+
+    public function update_user_by_id($table, $data, $id)
+	{
+		$result = $this->db->where('id', $id)->update($table, $data);
+		return $result;
+	}
 
     public function get_mastercode($module)
 	{

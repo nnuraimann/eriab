@@ -112,13 +112,14 @@ class Office extends CI_Controller {
         $data['user'] = $this->session->userdata();
         $data['content'] = 'office/user_setup/main';
         $data['script'] = 'office/user_setup/script';
+        $data['data'] = $this->dbMain->get_user('users');
         $this->load->view('template/office/main', $data);
     }
 
     public function user_create($data=false)
     {
         $data['user'] = $this->session->userdata();
-        $data['content'] = 'office/room_setup/create';
+        $data['content'] = 'office/user_setup/create';
         $this->load->view('template/office/main', $data);
     }
 
@@ -130,6 +131,39 @@ class Office extends CI_Controller {
         return redirect('office/user_setup');
 
     }
+
+    public function user_edit($id)
+    {
+        $data['data'] = $this->dbMain->find_user_by_id('users', $id);
+        // echo "<pre>", print_r($post), "</pre>";
+        $data['content'] = 'office/user_setup/edit';
+        $this->load->view('template/office/main', $data);
+    }
+
+    public function user_delete($id)
+	{
+		$this->dbMain->delete_user_by_id('users', $id);
+		$this->session->set_flashdata('message', '<div class="alert alert-success">Record has been deleted successfully.</div>');
+        return redirect('office/user_setup');	
+    }
+
+    public function update_user($id)
+	{
+        
+        $post=$this->input->post();
+        $insert=array(
+            'name' => $post['Name'],
+            'fullname' => $post['FullName'],
+            'email' => $post['Email'],
+            'password' => $post['Password'],
+            'rank' => $post['Type'],
+        );
+        
+		$this->dbMain->update_user_by_id('users', $insert, $id);
+        
+		$this->session->set_flashdata('message', '<div class="alert alert-success">Record has been updated successfully.</div>');
+        return redirect('office/user_setup');	
+	}
 
     public function profile($data=false)
     {
