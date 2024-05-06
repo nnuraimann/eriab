@@ -342,9 +342,9 @@ class Office extends CI_Controller {
         $id = $post['id'];
 
         $data['data'] = $this->dbMain->find_user_by_id('booking', $id);
-        echo "<pre>", print_r($data['data']), "</pre>"; exit;
         $data['user'] = $this->session->userdata();
         $this->load->view('office/room/form');
 
     }
+    
 }
