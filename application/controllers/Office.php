@@ -262,4 +262,89 @@ class Office extends CI_Controller {
         );
         echo json_encode($respond);
     }
+
+    public function check_booking($data=false)
+    {
+        $this->load->library('form_validation');
+        $post=$this->input->post();
+
+        $this->form_validation->set_data($post);
+        $this->form_validation->set_rules('date', 'create_dt', 'required');
+        $this->form_validation->set_rules('startTime', 'start_dt', 'required');
+        $this->form_validation->set_rules('endTime', 'end_dt', 'required');
+
+        $status = TRUE;
+        if ($this->form_validation->run() == FALSE) {
+            $status = FALSE;
+            $msg='Cannot book!';
+        } else {
+            $id = $this->input->post('id');
+            $startTime = $this->input->post('start_dt');
+            $endTime = $this->input->post('end_dt');
+            
+            if ($this->dbMain->check_booking($id, $startTime, $endTime)) {
+                $status = FALSE;
+                $msg = "Sorry, the room is already booked at that time.";
+            } else {
+                $status = TRUE;
+                $msg = "Booking successful!";
+            }
+        }
+        $respond=array(
+            'status'=>$status,
+            'msg'=>$msg,
+        );
+        echo json_encode($respond);
+    }
+
+    public function booking_load()
+    {
+        $booking_data = $this->dbMain->fetch_all_booking();
+        foreach($booking_data->result_array() as $row)
+        {
+            $data[] = array(
+                'id' => $row['id'],
+                'date' => $row['create_dt'],
+                'startTime' => $row['start_dt'],
+                'endTime' => $row['end_dt'],
+                'notes' => $row['notes']
+            );
+        }
+        echo json_encode($data);
+    }
+
+    public function booking_delete($id)
+    {
+        $post=$this->input->post();
+        $insert=array(
+            'id' => $post['id'],
+            'date' => $post['create_dt'],
+            'startTime' => $post['start_dt'],
+            'endTime' => $post['end_dt'],
+            'notes' => $post['notes'],
+        );
+        // echo "<pre>", print_r($post), "</pre>"; exit;
+
+        $data['data'] = $this->dbMain->find_booking_by_id('booking', $id);
+        $data['user'] = $this->session->userdata();
+        $data['content'] = 'office/room/main';
+        $this->load->view('template/office/main', $data);
+
+        if($this->input->booking('id'))
+        {
+            $this->dbMain->delete_booking($this->input->booking('id'));
+        }
+    }
+
+    public function booking_view()
+    {
+        $post=$this->input->post();
+        $id = $post['id'];
+
+        $data['data'] = $this->dbMain->find_user_by_id('booking', $id);
+        echo "<pre>", print_r($data['data']), "</pre>"; exit;
+        $data['user'] = $this->session->userdata();
+        $this->load->view('office/room/form');
+
+    }
 }

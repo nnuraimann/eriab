@@ -1,59 +1,75 @@
 <link rel="stylesheet" href="<?php echo base_url('assets/'); ?>plugins/timepicker/bootstrap-timepicker.min.css">
-
-
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog">
     <div class="modal-content">
         <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Booking Form</h4>
+        <h4 class="modal-title">Primary Modal</h4>
         </div>
         <div class="modal-body">
         <form role="form" id="frm-booking">
             <div class="box-body">
-            <div class="form-group">
-                <label for="exampleInputEmail1">Date</label>
-                <input type="text" name="date" class="form-control" id="date-current">
-            </div>
-
-            <div class="bootstrap-timepicker">
                 <div class="form-group">
-                  <label>Start time:</label>
-
-                  <div class="input-group">
-                    <input type="text" name="startTime" class="form-control timepicker">
-
-                    <div class="input-group-addon">
-                      <i class="fa fa-clock-o"></i>
-                    </div>
-                  </div>
-                  <!-- /.input group -->
+                    <label for="exampleInputEmail1">Date</label>
+                    <input type="text" name="date" class="form-control" id="date-current">
                 </div>
+
+                <div class="bootstrap-timepicker">
+                    <div class="form-group">
+                    <label>Start time:</label>
+
+                    <div class="input-group">
+                        <input type="text" name="startTime" class="form-control timepicker">
+
+                        <div class="input-group-addon">
+                        <i class="fa fa-clock-o"></i>
+                        </div>
+                    </div>
+                    <!-- /.input group -->
+                    </div>
+
+                    <div class="form-group">
+                    <label>End time:</label>
+
+                    <div class="input-group">
+                        <input type="text" name="endTime" class="form-control timepicker">
+
+                        <div class="input-group-addon">
+                        <i class="fa fa-clock-o"></i>
+                        </div>
+                    </div>
+                    <!-- /.input group -->
+                    </div>
+                    <!-- /.form group -->
+                </div>
+
                 <div class="form-group">
-                  <label>End time:</label>
-
-                  <div class="input-group">
-                    <input type="text" name="endTime" class="form-control timepicker">
-
-                    <div class="input-group-addon">
-                      <i class="fa fa-clock-o"></i>
-                    </div>
-                  </div>
-                  <!-- /.input group -->
+                    <label for="exampleInputPassword1">Notes</label>
+                    <input type="text" name="notes" class="form-control" id="notes">
                 </div>
-                <!-- /.form group -->
-              </div>
-
-            <div class="form-group">
-                <label for="exampleInputPassword1">Notes</label>
-                <input type="text" name="notes" class="form-control" id="notes">
             </div>
         </form>
         </div>
         <div class="modal-footer">
         <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary btn-submit-booking">Submit</button>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal-view-calendar">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Primary Modal</h4>
+        </div>
+        <div id="modal-content-view-calendar">
         </div>
     </div>
     <!-- /.modal-content -->
@@ -79,7 +95,7 @@ $(document).ready(function(){
             center:'title',
             right:'month,agendaWeek,agendaDay'
         },
-        events:"<?php echo base_url(); ?>fullcalendar/load",
+        events:"<?php echo base_url(); ?>office/booking_load",
         selectable:true,
         selectHelper:true,
         select:function(start, end, allDay)
@@ -147,22 +163,29 @@ $.ajax({
                 }
             })
         },
-        eventClick:function(event)
+        eventClick: function(event) 
         {
-            if(confirm("Are you sure you want to remove it?"))
-            {
-                var id = event.id;
-                $.ajax({
-                    url:"<?php echo base_url(); ?>fullcalendar/delete",
-                    type:"POST",
-                    data:{id:id},
-                    success:function()
-                    {
-                        calendar.fullCalendar('refetchEvents');
-                        alert('Event Removed');
-                    }
-                })
-            }
+            var id = event.id; 
+            $.ajax({
+                url: "<?php echo base_url(); ?>office/booking_view",
+                type: "POST", 
+                dataType: "html",
+                data: { id: id },
+                success: function(data) {
+                    $('#modal-view-calendar').modal('show');
+                    $('#modal-content-view-calendar').html(data);
+
+                    // calendar.fullCalendar('refetchEvents');
+                    // alert('Event Removed');
+                }
+            });
+
+            // $('#modal-default').modal('show');
+            // var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
+            // $('#date-current').val(start);
+            // $('.timepicker').timepicker({
+            //     showInputs: false
+            // });
         }
     });
 });
@@ -184,5 +207,6 @@ $(document).on("click",".btn-submit-booking",function() {
         }
     })
 });
+
 
 </script>
