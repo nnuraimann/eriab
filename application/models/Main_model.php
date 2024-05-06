@@ -188,4 +188,32 @@ class Main_model extends CI_Model {
         $result = $this->db->insert($table, $insert);
 		return $result;
     }
+
+    public function fetch_all_booking()
+    {
+        $this->db->order_by('id');
+        return $this->db->get('booking');
+    }
+
+    public function delete_booking($id)
+    {
+        $this->db->where('id', $id);
+        $this->db->delete('booking');
+        $query = $this->db->get_where('booking', array('id' => $id));
+        return $query->row_array();
+    }
+
+    public function find_booking_by_id($table, $id)
+    {
+        $result = $this->db->get_where($table, ['id' => $id])->row();
+		return $result;
+    }
+
+    public function check_booking($id, $startTime, $endTime)
+    {
+        $this->db->where('id', $id);
+        $this->db->where("(start_dt < '$endTime' AND end_time > '$startTime')");
+        $query = $this->db->get('booking');
+        return $query->num_rows() > 0;
+    }
 }
