@@ -6,18 +6,6 @@
     </ul>      
     <ul class="sidebar-menu" data-widget="tree">
     <li class="treeview">
-        <a href="#"><i class="fa fa-link"></i> <span>Booking</span>
-        <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-            </span>
-        </a>
-        <ul class="treeview-menu">
-        <li><a href="<?php echo base_url('office/booking'); ?>">Current Booking</a></li>
-        </ul>
-    </li>
-    </ul>
-    <ul class="sidebar-menu" data-widget="tree">
-    <li class="treeview">
         <a href="#"><i class="fa fa-link"></i> <span>Reservation</span>
         <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>

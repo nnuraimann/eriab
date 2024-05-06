@@ -20,7 +20,7 @@
 
           <thead class="thead-light">
             <tr>
-              <th width="2%">#</th>
+              <th width="2%">No.</th>
               <th width="35%">Room Name</th>
               <th width="25%">Room Department</th>
               <th width="15%">Room Capacity</th>

@@ -3,13 +3,14 @@
   <div class="row">
 
     <div class="col-lg-12 my-5">
-      <h2 class="text-center mb-3">Edit Room</h2>
+      <h2 class="text-center mb-3">User Edit</h2>
     </div>
 
     <div class="col-lg-12">
 
       <div class="d-flex justify-content-between ">
-        <h4>Add New Room</h4>
+        <h4>Edit The User</h4>
+        <!-- Encrypt the user ID before passing it in the URL -->
         <a class="btn btn-warning" href="<?php echo base_url('office/user_setup'); ?>"> <i class="fas fa-angle-left"></i> Back</a>
       </div>
 
@@ -32,8 +33,9 @@
 
         <div class="form-group">
           <label>User Password</label>
-          <input class="form-control" type="text" name="Password" value="<?php echo $data->password; ?>">
+          <input class="form-control" type="password" name="Password" value="<?php echo $data->password; ?>">
         </div>
+
 
         <div class="form-group">
           <label for="usertype">User Type</label>

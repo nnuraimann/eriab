@@ -19,7 +19,7 @@
 
           <thead class="thead-light">
             <tr>
-              <th width="2%">#</th>
+              <th width="2%">No.</th>
               <th width="18%">Name</th>
               <th width="20%">Full Name</th>
               <th width="20%">Email</th>

@@ -10,6 +10,8 @@ class Office extends CI_Controller {
 
         // load model
         $this->load->model('Main_model', 'dbMain');
+
+        $this->load->library('encryption');
     }
 
     public function index($data=false)
@@ -30,6 +32,14 @@ class Office extends CI_Controller {
         $data['content'] = 'office/booking/main';
         $data['script'] = 'office/booking/script';
         $this->load->view('template/office/main', $data);
+    }
+
+    private function encrypt_user_id($user_id) {
+        return $this->encryption->encrypt($user_id);
+    }
+
+    private function decrypt_user_id($encrypted_id) {
+        return $this->encryption->decrypt($encrypted_id);
     }
 
 //******************************************************************************/
@@ -145,11 +155,18 @@ class Office extends CI_Controller {
 
     public function user_edit($id)
     {
-        $data['data'] = $this->dbMain->find_user_by_id('users', $id);
+        // Encrypt the user ID before passing it to the view
+        $encrypted_user_id = $this->encrypt_user_id($id);
+
+        // Construct the encrypted URL
+        $encrypted_url = base_url('office/user_edit/' . urlencode($encrypted_user_id));
+
+        $data['data'] = $this->dbMain->find_user_by_id('users', $id); // Pass the original user ID to the model
         $data['user'] = $this->session->userdata();
         $data['usertype'] = $this->dbMain->get_mastercode("user_rank");
-        // echo "<pre>", print_r($post), "</pre>";
         $data['content'] = 'office/user_setup/edit';
+        // Pass the encrypted URL to the view instead of the original user ID
+        $data['encrypted_url'] = $encrypted_url;
         $this->load->view('template/office/main', $data);
     }
 
@@ -160,12 +177,14 @@ class Office extends CI_Controller {
         return redirect('office/user_setup');	
     }
 
-    // public function user_pass_reset($id)
-	// {
-	// 	$this->dbMain->reset_pass('users', $id);
-	// 	$this->session->set_flashdata('message', '<div class="alert alert-success">Password has been reset successfully.</div>');
-    //     return redirect('office/user_setup');	
-    // }
+    public function user_pass_reset($id)
+{
+    $data['pass'] = $this->dbMain->get_mastercode("default_pass");
+    $this->dbMain->reset_pass($id);
+    $this->session->set_flashdata('message', '<div class="alert alert-success">Password has been reset successfully.</div>');
+    return redirect('office/user_setup');
+}
+
 
     public function update_user($id)
 	{
@@ -175,7 +194,7 @@ class Office extends CI_Controller {
             'name' => $post['Name'],
             'fullname' => $post['FullName'],
             'email' => $post['Email'],
-            'password' => $post['Password'],
+            'password' => md5($post['Password']),
             'rank' => $post['Type'],
         );
         

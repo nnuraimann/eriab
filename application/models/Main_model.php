@@ -150,6 +150,7 @@ class Main_model extends CI_Model {
 		return $result;
 	}
 
+
     public function update_user_by_id($table, $data, $id)
 	{
 		$result = $this->db->where('id', $id)->update($table, $data);
@@ -188,4 +189,13 @@ class Main_model extends CI_Model {
         $result = $this->db->insert($table, $insert);
 		return $result;
     }
+
+    public function reset_pass($id)
+    {
+        $default_password_row = $this->get_mastercode('default_pass');
+        $default_password = $default_password_row[0]->value;
+        $hashed_default_password = md5($default_password);
+        return $this->db->update('users', array('password' => $hashed_default_password), array('id' => $id));
+    }
+    
 }
