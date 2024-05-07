@@ -21,16 +21,21 @@ class Office extends CI_Controller {
 
     public function dashboard($data=false) 
     {
+        $user_id = $this->session->userdata('id');
         $data['user'] = $this->session->userdata();
         $data['content'] = 'office/dashboard/main';
         $data['script'] = 'office/dashboard/script';
+        $data['data'] = $this->dbMain->get_user_booking('booking', $user_id);
+        //echo "<pre>", print_r($data), "</pre>"; exit;
         $this->load->view('template/office/main', $data);
     }
     public function booking($data=false)
     {
+        $user_id = $this->session->userdata('id');
         $data['user'] = $this->session->userdata();
         $data['content'] = 'office/booking/main';
         $data['script'] = 'office/booking/script';
+        $data['data'] = $this->dbMain->get_user_booking('booking', $user_id);
         $this->load->view('template/office/main', $data);
     }
 
@@ -346,5 +351,7 @@ class Office extends CI_Controller {
         $this->load->view('office/room/form');
 
     }
+
+    
     
 }

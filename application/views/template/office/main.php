@@ -94,6 +94,10 @@ desired effect
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
+              <div class="user-panel">
+              <div class="pull-center image">
+                  <img src="<?php echo base_url(); ?>/ImageSource/userprofile.jpg" class="img-circle" alt="" style="max-width: 85px !important;">
+              </div>
                 <p>
                   <?php echo $user['name']; ?>
                   <!-- nama user -->
