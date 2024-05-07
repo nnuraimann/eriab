@@ -230,36 +230,46 @@ class Office extends CI_Controller {
         $this->load->library('form_validation');
         $post=$this->input->post();
 
-
         $this->form_validation->set_data($post);
         $this->form_validation->set_rules('date', 'create_dt', 'required');
         $this->form_validation->set_rules('startTime', 'start_dt', 'required');
         $this->form_validation->set_rules('endTime', 'end_dt', 'required');
-
+        $this->form_validation->set_rules('notes', 'notes', 'required');
+        $this->form_validation->set_rules('room_id', 'room_id', 'required');
+        
         $status = TRUE;
         if ($this->form_validation->run() == FALSE) {
             $status = FALSE;
             $msg='Form unsuccessful';
         } else{
-            $startTime = $post['startTime'];
-            $endTime = $post['endTime'];
-
-            // Create a DateTime object using the time string
-            $dateTime1 = DateTime::createFromFormat('g:i A', $startTime);
-            $dateTime2 = DateTime::createFromFormat('g:i A', $endTime);
-
-            // Format the DateTime object to 24-hour format
-            $cstartTime = $dateTime1->format('H:i:s');
-            $cendTime = $dateTime2->format('H:i:s');
-
-            if($cstartTime >= $cendTime){
+            $post_date = $post['date'];
+            $cur_date = date('Y-m-d');
+            if($post_date < $cur_date)
+            {
                 $status = FALSE;
-                $msg='Start time cannot more than or equal to End time';
-            } else{
-                $this->dbMain->add_booking('booking', $post);
-                $status = TRUE;
-                $msg='Booking Successful!';
+                $msg='You must select current date onward !';
+            }else{
+                $startTime = $post['startTime'];
+                $endTime = $post['endTime'];
+
+                // Create a DateTime object using the time string
+                $dateTime1 = DateTime::createFromFormat('g:i A', $startTime);
+                $dateTime2 = DateTime::createFromFormat('g:i A', $endTime);
+
+                // Format the DateTime object to 24-hour format
+                $cstartTime = $dateTime1->format('H:i:s');
+                $cendTime = $dateTime2->format('H:i:s');
+
+                if($cstartTime >= $cendTime){
+                    $status = FALSE;
+                    $msg='Start time cannot more than or equal to End time';
+                } else{
+                    $this->dbMain->add_booking('booking', $post);
+                    $status = TRUE;
+                    $msg='Booking Successful!';
+                }
             }
+            
         }
         $respond=array(
             'status'=>$status,
@@ -304,15 +314,15 @@ class Office extends CI_Controller {
 
     public function booking_load()
     {
-        $booking_data = $this->dbMain->fetch_all_booking();
+        $post = $this->input->post();
+
+        $booking_data = $this->dbMain->fetch_all_booking($post['room_id']);
         foreach($booking_data->result_array() as $row)
         {
             $data[] = array(
-                'id' => $row['id'],
-                'date' => $row['create_dt'],
-                'startTime' => $row['start_dt'],
-                'endTime' => $row['end_dt'],
-                'notes' => $row['notes']
+                'start'     => $row['start_dt'],
+                'end'       => $row['end_dt'],
+                'title'     => $row['notes']
             );
         }
         echo json_encode($data);
