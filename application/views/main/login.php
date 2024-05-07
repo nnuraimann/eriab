@@ -27,10 +27,11 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="<?php echo base_url('assets/'); ?>gfont.css">
 </head>
-<body class="hold-transition login-page">
+
+<body class="hold-transition login-page" style="background-image: url('<?php echo base_url('ImageSource/background.jpg');?>'); background-size: cover; background-position: center; background-repeat: no-repeat;">
 <div class="login-box">
   <div class="login-logo">
-    <a href="../../index2.html"><b>E-Reservation</b><br>Institute Aminuddin Baki</br></a>
+    <a href="../../index2.html" style="color : #fff;"><b>E-Reservation</b><br>Institute Aminuddin Baki</br></a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
