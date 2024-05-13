@@ -95,7 +95,7 @@ $(document).ready(function(){
             center:'title',
             right:'month,agendaWeek,agendaDay'
         },
-        events:"<?php echo base_url(); ?>office/booking_load",
+        events:"",
         selectable:true,
         selectHelper:true,
         select:function(start, end, allDay)
@@ -106,96 +106,31 @@ $(document).ready(function(){
             $('.timepicker').timepicker({
             showInputs: false
             });
-
-            // var title = prompt("Enter Event Title");
-            // if(title)
-            // {
-            //     var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-            //     var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-            //     $.ajax({
-            //         url:"<?php echo base_url(); ?>fullcalendar/insert",
-            //         type:"POST",
-            //         data:{title:title, start:start, end:end},
-            //         success:function()
-            //         {
-            //             calendar.fullCalendar('refetchEvents');
-            //             alert("Added Successfully");
-            //         }
-            //     })
-            // }
-        },
-        eventResize:function(event)
-        {
-            var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-            var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-
-            var title = event.title;
-
-            var id = event.id;
-
-$.ajax({
-                url:"<?php echo base_url(); ?>fullcalendar/update",
-                type:"POST",
-                data:{title:title, start:start, end:end, id:id},
-                success:function()
-                {
-                    calendar.fullCalendar('refetchEvents');
-                    alert("Event Update");
-                }
-            })
-        },
-        eventDrop:function(event)
-        {
-            var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-            //alert(start);
-            var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-            //alert(end);
-            var title = event.title;
-            var id = event.id;
-            $.ajax({
-                url:"<?php echo base_url(); ?>fullcalendar/update",
-                type:"POST",
-                data:{title:title, start:start, end:end, id:id},
-                success:function()
-                {
-                    calendar.fullCalendar('refetchEvents');
-                    alert("Event Updated");
-                }
-            })
-        },
-        eventClick: function(event) 
-        {
-            var id = event.id; 
-            $.ajax({
-                url: "<?php echo base_url(); ?>office/booking_view",
-                type: "POST", 
-                dataType: "html",
-                data: { id: id },
-                success: function(data) {
-                    $('#modal-view-calendar').modal('show');
-                    $('#modal-content-view-calendar').html(data);
-
-                    // calendar.fullCalendar('refetchEvents');
-                    // alert('Event Removed');
-                }
-            });
-
-            // $('#modal-default').modal('show');
-            // var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
-            // $('#date-current').val(start);
-            // $('.timepicker').timepicker({
-            //     showInputs: false
-            // });
         }
+        // eventClick: function(event) 
+        // {
+        //     var id = event.id; 
+        //     $.ajax({
+        //         url: "<?php echo base_url(); ?>office/booking_view",
+        //         type: "POST", 
+        //         dataType: "html",
+        //         data: { id: id },
+        //         success: function(data) {
+        //             $('#modal-view-calendar').modal('show');
+        //             $('#modal-content-view-calendar').html(data);
+        //         }
+        //     });
+        // }
     });
 });
 
 $(document).on("click",".btn-submit-booking",function() {
+    var room_id = $('#room-type').val();
     $.ajax({
         url:"<?php echo base_url(); ?>office/submit_booking",
         type:"POST",
         dataType:"json",
-        data:$('#frm-booking').serialize(),
+        data:$('#frm-booking').serialize() + '&room_id=' + room_id,
         success:function(data)
         {
             if(data.status == true){
@@ -208,5 +143,20 @@ $(document).on("click",".btn-submit-booking",function() {
     })
 });
 
+$(document).on("click",".btn-search-booking",function() {
+    var room_id = $('#room-type').val();
+    $.ajax({
+        url:"<?php echo base_url(); ?>office/booking_load",
+        type:"POST",
+        dataType:"json",
+        data: { room_id : room_id },
+        success:function(data)
+        {
+            $('#calendar').fullCalendar('removeEvents');
+              $('#calendar').fullCalendar('addEventSource', data);         
+              $('#calendar').fullCalendar('rerenderEvents' );
+        }
+    })
+});
 
 </script>

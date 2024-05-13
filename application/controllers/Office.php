@@ -19,24 +19,38 @@ class Office extends CI_Controller {
         redirect('office/dashboard');
     }
 
-    public function dashboard($data=false) 
+    public function dashboard($data = false) 
+{
+    $user_id = $this->session->userdata('id');
+    $user_type = $this->session->userdata('rank'); // Fetch user type from session
+
+    if ($user_type == 'Admin') // Check if user type is 'Admin'
     {
-        $user_id = $this->session->userdata('id');
-        $data['user'] = $this->session->userdata();
-        $data['content'] = 'office/dashboard/main';
-        $data['script'] = 'office/dashboard/script';
-        $data['data'] = $this->dbMain->get_user_booking('booking', $user_id);
-        //echo "<pre>", print_r($data), "</pre>"; exit;
-        $this->load->view('template/office/main', $data);
+        $data['content'] = 'office/dashboard/menu'; // Set content for admin
     }
+    else
+    {
+        $data['user'] = $this->session->userdata(); // Pass user data to view
+        $data['content'] = 'office/dashboard/main'; // Set content for non-admin users
+        $data['script'] = 'office/dashboard/script'; // Set script for non-admin users
+        $data['data'] = $this->dbMain->get_user_booking('booking', $user_id); // Fetch booking data for the user
+    }
+
+    $this->load->view('template/office/main', $data); // Load the main view
+}
+
+
+    //echo "<pre>", print_r($data), "</pre>"; exit;
+    
     public function booking($data=false)
     {
-        $user_id = $this->session->userdata('id');
-        $data['user'] = $this->session->userdata();
-        $data['content'] = 'office/booking/main';
-        $data['script'] = 'office/booking/script';
-        $data['data'] = $this->dbMain->get_user_booking('booking', $user_id);
-        $this->load->view('template/office/main', $data);
+    $user_id = $this->session->userdata('id');
+    $data['user'] = $this->session->userdata();
+    $data['content'] = 'office/booking/main';
+    $data['script'] = 'office/booking/script';
+    $data['data'] = $this->dbMain->get_user_booking('booking', $user_id);
+    $data['rooms'] = $this->dbMain->get_room('room_name');
+    $this->load->view('template/office/main', $data);
     }
 
     private function encrypt_user_id($user_id) {
@@ -65,13 +79,15 @@ class Office extends CI_Controller {
     }
 
     public function room_setup($data=false)
-    {
-        $data['user'] = $this->session->userdata();
-        $data['content'] = 'office/room_setup/main';
-        $data['script'] = 'office/room_setup/script';
-        $data['data'] = $this->dbMain->get_room('room');
-        $this->load->view('template/office/main', $data);
-    }
+{
+    $data['user'] = $this->session->userdata();
+    $data['content'] = 'office/room_setup/main';
+    $data['script'] = 'office/room_setup/script';
+    $data['data'] = $this->dbMain->get_room('room');
+    
+    $this->load->view('template/office/main', $data);
+}
+
 
     public function room_create($data=false)
     {

@@ -232,4 +232,5 @@
             $result = $this->db->get($table)->result();
             return $result;
         }
+  
     }

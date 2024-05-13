@@ -9,6 +9,9 @@
                 <div class="col-sm-9">
                     <select class="form-control col-lg-10" id="room-type" name="Type">
                         <option value="">[ Select Room ]</option>
+                        <option value="5">Room 5</option>
+                        <option value="4">Room 4</option>
+                        <option value="3">Room 3</option>
                         <option value="2">Room 2</option>
                         <option value="1">Room 1</option>
                     </select>
